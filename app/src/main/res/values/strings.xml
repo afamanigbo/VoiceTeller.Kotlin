@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">VoiceTeller</string>
+    <string name="voice_teller">Voice Teller</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="facebook_application_id">308650750966680</string>
+    <string name="facebook_login_protocol_scheme">fb308650750966680</string>
+
+</resources>

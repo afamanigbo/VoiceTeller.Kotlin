@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "432364721389",
+    "project_id": "voiceteller-aiconverse",
+    "storage_bucket": "voiceteller-aiconverse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432364721389:android:8bafc277e5cc0f647e28e4",
+        "android_client_info": {
+          "package_name": "com.aiconverse.voiceteller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "432364721389-uq5ct43c5l653k87lc550a6n5g3964fb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aiconverse.voiceteller",
+            "certificate_hash": "f397ba03a8fbb83b5de5c3c492767cdf9a37ccf3"
+          }
+        },
+        {
+          "client_id": "432364721389-1c4097g5m2l1f12554ds44damk9ee1ru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMqBxuYD2sptyAqn-NxlJUQNBNPG-4rBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432364721389-1c4097g5m2l1f12554ds44damk9ee1ru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
