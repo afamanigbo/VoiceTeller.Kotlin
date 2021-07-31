@@ -3,10 +3,15 @@ buildscript {
     ext.kotlin_version = "1.5.10"
     ext {
         navigationVersion = '2.3.5'
+
+        merchantId = '"IKIA85D3BD7C5B67ACB35BE9E574D4C0B5E04D61EDC1"'
+        merchantKey = '"LZpJeurCBl3CSw6"'
+        merchantCode = '"MX51902"'
     }
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://csspeechstorage.blob.core.windows.net/maven/' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
@@ -24,7 +29,7 @@ allprojects {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
-
+        maven { url 'https://csspeechstorage.blob.core.windows.net/maven/' }
     }
 }
 

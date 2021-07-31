@@ -2,22 +2,15 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
+
 }
 
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
 repositories {
     maven {
         name = "GitHubPackages"
 
         url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")
         credentials {
-            /** Create github.properties in root project folder file with
-             ** gpr.usr=GITHUB_USER_ID & gpr.key=PERSONAL_ACCESS_TOKEN
-             ** Or set env variable GPR_USER & GPR_API_KEY if not adding a properties file**/
-            //username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
-            //password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
-
             username = "40688066"
             password = "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"
         }
@@ -30,12 +23,19 @@ android {
 
     defaultConfig {
         applicationId "com.aiconverse.voiceteller"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+
+        // set merchant details
+        buildConfigField("String", "MERCHANT_ID", merchantId)
+        buildConfigField("String", "MERCHANT_KEY", merchantKey)
+        buildConfigField("String", "MERCHANT_CODE", merchantCode)
     }
 
     buildTypes {
@@ -53,6 +53,7 @@ android {
     }
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 }
 
@@ -66,6 +67,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha02'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -84,4 +86,31 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation 'com.facebook.android:facebook-android-sdk:11.1.0'
+
+    //implementation 'com.microsoft.cognitiveservices.speech:client-sdk:1.17.0'
+
+    implementation 'androidx.security:security-crypto:1.0.0'
+
+    // Moshi
+    implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
+
+    // Retrofit with Moshi Converter
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+
+    // HTTP interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+
+    // payment sdk
+    def versionName = '1.0.4'
+    implementation "com.interswitchng:isw-mobile-payment-sdk:$versionName"
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.10'
+
+    // work manager
+    def work_version = "2.5.0"
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 }

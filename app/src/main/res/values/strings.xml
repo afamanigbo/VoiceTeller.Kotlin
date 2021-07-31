@@ -6,5 +6,7 @@
 
     <string name="facebook_application_id">308650750966680</string>
     <string name="facebook_login_protocol_scheme">fb308650750966680</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>
