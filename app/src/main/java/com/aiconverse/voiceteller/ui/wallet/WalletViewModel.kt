@@ -34,9 +34,14 @@ class WalletViewModel : ViewModel() {
 
     fun addCardToWallet(id: String, applicationContext: Context, cardModel: CardModel){
         ProfileRepository.addCardToWallet(id, applicationContext, cardModel)
+
     }
 
     fun getCardsFromWallet(id: String, applicationContext: Context): MutableList<CardModel>? {
         return ProfileRepository.getCardsFromWallet(id, applicationContext)
+    }
+
+    fun setDiffStatus(id:String, status: String, applicationContext: Context){
+        ProfileRepository.setDiffStatus(id, status, applicationContext)
     }
 }

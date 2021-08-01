@@ -66,6 +66,8 @@ class AuthViewModel(application: Application): AndroidViewModel(application) {
         return ProfileRepository.getUserCloudStatus(id, applicationContext)
     }
 
-
+    fun setDiffStatus(id:String, status: String, applicationContext: Context){
+        ProfileRepository.setDiffStatus(id, status, applicationContext)
+    }
 
 }

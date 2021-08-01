@@ -2,17 +2,11 @@ package com.aiconverse.voiceteller
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.aiconverse.voiceteller.repository.profile.ProfileModel
-import com.aiconverse.voiceteller.ui.wallet.WalletViewModel
 import com.aiconverse.voiceteller.util.PreferencesManager
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
@@ -20,8 +14,6 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import timber.log.Timber
 
 class AuthActivity : AppCompatActivity() {
@@ -35,22 +27,6 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var user: FirebaseUser
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    private val authStateListener = FirebaseAuth.AuthStateListener {
-
-        if (it.currentUser != null) {
-            user = it.currentUser!!
-
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-            finish()
-        }
-        else{
-            createSignInIntent()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
@@ -58,10 +34,15 @@ class AuthActivity : AppCompatActivity() {
         progress = findViewById(R.id.progress)
 
         //PreferencesManager.getInstance(applicationContext).clearAllItems()
+        //firebaseAuth.signOut()
 
-        firebaseAuth.signOut()
-        //firebaseAuth!!.addAuthStateListener(this.authStateListener!!)
-        createSignInIntent()
+        if(firebaseAuth.currentUser == null){
+            createSignInIntent()
+        }
+        else{
+            handleSignIn(firebaseAuth.currentUser!!, null)
+        }
+
     }
 
     private val signInLauncher = registerForActivityResult(
@@ -77,82 +58,121 @@ class AuthActivity : AppCompatActivity() {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
 
-            // get JWT
-            user?.getIdToken(false)?.addOnSuccessListener { rsp ->
+            handleSignIn(user!!, result)
+        }
 
-                val jwt = rsp.token.toString()
+        else {
 
-                // get user from Firebase Auth
-                val profileModel = ProfileModel(
-                    id = user?.email!!,
-                    names = user?.displayName!!,
-                    authenticationType = "firebase",
-                    identityProvider = response?.providerType!!,
-                    createDate = user?.metadata?.creationTimestamp.toString(),
-                    imageUrl = user?.photoUrl.toString(),
-                    walletModel = null
-                )
+            // user cancelled sign in
+            if (response == null){
+                Toast.makeText(applicationContext, "Sign in cancelled.", Toast.LENGTH_LONG).show()
+            }
+            else{
+                Timber.d("M: Sign in failed: ${response.error?.errorCode}")
+                Toast.makeText(applicationContext, "Sign in failed.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
-                // get user from shared preferences
-                var sharedPreferencesProfileModel = viewModel
-                    .getUserSharedPreferences(profileModel.id, applicationContext)
+    private fun handleSignIn(user: FirebaseUser, result: FirebaseAuthUIAuthenticationResult?){
 
-                // if user does not exist there, create it
-                if (sharedPreferencesProfileModel == null) {
+        // get logged in user
+        user?.let {
+            // get user from Firebase Auth
+            val profileModel = ProfileModel(
+                id = user.email!!,
+                names = user.displayName!!,
+                authenticationType = "firebase",
+                identityProvider = user.providerData[0].providerId,
+                createDate = user.metadata?.creationTimestamp.toString(),
+                imageUrl = user.photoUrl.toString(),
+                walletModel = null
+            )
 
-                    viewModel.createUserSharedPreferences(profileModel, applicationContext)
+            // get user from shared preferences
+            var sharedPreferencesProfileModel = viewModel
+                .getUserSharedPreferences(profileModel.id, applicationContext)
 
-                    // not a new firebase user
-                    if (!result?.idpResponse?.isNewUser!!) {
+            // if user does not exist there, create it
+            if (sharedPreferencesProfileModel == null) {
 
-                        // try to sync from cloud, this will also internally set cloud status
+                Timber.d("M: Shared preferences NULL")
+
+                viewModel.createUserSharedPreferences(profileModel, applicationContext)
+
+                // user must have manually signed in for shared preferences to be null
+
+                // Not a new user
+                if (!result?.idpResponse?.isNewUser!!) {
+
+                    Timber.d("M: OLD user")
+
+                    // try to sync from cloud, this will also internally set cloud status
+                    user?.getIdToken(false)?.addOnSuccessListener { rsp ->
+                        val jwt = rsp.token.toString()
                         viewModel.getUserWorker(jwt, profileModel.id)
                     }
-                    else{
-                        // This is a new user
-                        // ensure its pushed to cloud later,
+                }
+                else{
+                    // This is a new user
 
+                    Timber.d("M: NEW user")
+
+                    // DIFF is true, something has changed - (New User sign in)
+                    viewModel.setDiffStatus(user.email!!, "PUSH", applicationContext)
+
+                    // not in cloud, so push from device to cloud
+                    user?.getIdToken(false)?.addOnSuccessListener { rsp ->
+                        val jwt = rsp.token.toString()
                         viewModel.createUserWorker(jwt, profileModel)
                     }
 
                 }
-                else {
-                    // user is on shared preferences
-                    val cloudStatus =
-                        viewModel.getUserCloudStatus(profileModel.id, applicationContext)
+            }
 
-                    Timber.d("Cloud Status: $cloudStatus")
+            // User are on shared preferences. user has signed in before
+            else {
 
-                    when (cloudStatus) {
-                        "404" -> {
-                            // not in cloud, so push from device to cloud
+                Timber.d("M: Shared preferences NOT NULL")
+
+                val cloudStatus =
+                    viewModel.getUserCloudStatus(profileModel.id, applicationContext)
+
+                Timber.d("M: Cloud Status: $cloudStatus")
+
+                when (cloudStatus) {
+                    "404" -> {
+                        // not in cloud, so push from device to cloud
+                        user?.getIdToken(false)?.addOnSuccessListener { rsp ->
+                            val jwt = rsp.token.toString()
                             viewModel.createUserWorker(jwt, profileModel)
                         }
-                        "200" -> {
-                            // downloaded from cloud to device initially
-                            // so push from device to cloud
+                    }
+                    "200" -> {
+                        // downloaded from cloud to device initially
+                        // so push from device to cloud
+                        user?.getIdToken(false)?.addOnSuccessListener { rsp ->
+                            val jwt = rsp.token.toString()
                             viewModel.createUserWorker(jwt, profileModel)
                         }
-                        else -> {
-                            // cannot determine status, sync from cloud
+                    }
+                    else -> {
+                        // cannot determine status, sync from cloud
+                        user?.getIdToken(false)?.addOnSuccessListener { rsp ->
+                            val jwt = rsp.token.toString()
                             viewModel.getUserWorker(jwt, profileModel.id)
                         }
                     }
                 }
             }
 
-            // if email not verified, send verification email
-            // else redirect to MainActivity
-
-            navigateFromActivity()
         }
 
-        else {
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
-        }
+        // if email not verified, send verification email
+        // else redirect to MainActivity
+
+        navigateFromActivity()
+
     }
 
     private fun navigateFromActivity(){

@@ -7,6 +7,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
 import java.util.*
 
 
@@ -24,6 +25,7 @@ object UtilManager {
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val jsonAdapter = moshi.adapter(ProfileModel::class.java)
 
+        Timber.d("M: Moshi input json string: $json")
         return jsonAdapter.fromJson(json)
     }
 
@@ -31,7 +33,11 @@ object UtilManager {
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val jsonAdapter = moshi.adapter(ProfileModel::class.java)
 
-        return jsonAdapter.toJson(profileModel)
+        val retval = jsonAdapter.toJson(profileModel)
+
+        Timber.d("M: Moshi output json string: $retval")
+
+        return retval
     }
 
     fun deSerializeJsonWalletModel(json: String): WalletModel? {

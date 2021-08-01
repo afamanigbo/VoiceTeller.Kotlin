@@ -159,6 +159,7 @@ class WalletFragment : Fragment() , IswMobileSdk.IswPaymentCallback{
 
                         // add to profile model
                         viewModel.addCardToWallet(id, requireContext(), rsp)
+                        viewModel.setDiffStatus(id, "PUSH", requireContext())
 
                         data.add(rsp)
                         adapter.addItem(rsp)

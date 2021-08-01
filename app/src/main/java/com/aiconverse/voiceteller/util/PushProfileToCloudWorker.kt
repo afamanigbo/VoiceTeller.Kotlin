@@ -27,7 +27,9 @@ class PushProfileToCloudWorker(appContext: Context, params: WorkerParameters) :
             val updateStatus =
                 ProfileRepository.getDiffStatus(id!!, applicationContext)
 
-            if (updateStatus != "TRUE"){
+            Timber.d("M: DIFF Status %s", updateStatus)
+
+            if (updateStatus != "PUSH"){
                 return Result.success()
             }
 
@@ -46,7 +48,7 @@ class PushProfileToCloudWorker(appContext: Context, params: WorkerParameters) :
                 if(response.isSuccessful) {
                     Timber.d("M: Profile Sync Successful %s", response.code())
 
-                    ProfileRepository.setDiffStatus(id!!, "FALSE", applicationContext)
+                    ProfileRepository.setDiffStatus(id!!, "STAY", applicationContext)
                     return Result.success()
                 }
                 else{

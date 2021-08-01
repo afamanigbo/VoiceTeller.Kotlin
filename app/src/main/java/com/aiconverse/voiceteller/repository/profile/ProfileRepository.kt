@@ -34,12 +34,12 @@ object ProfileRepository {
 
     fun setDiffStatus(id: String, status: String,  applicationContext: Context) {
         val statusId = id + "_DIFF_STATUS"
-        setItem(id, status, applicationContext)
+        setItem(statusId, status, applicationContext)
     }
 
     fun setUserCloudStatus(id: String, status: String,  applicationContext: Context) {
         val statusId = id + "_CLOUD_STATUS"
-        setItem(id, status, applicationContext)
+        setItem(statusId, status, applicationContext)
     }
 
     private fun getItem(id: String, applicationContext: Context): String?{
