@@ -154,7 +154,7 @@ class WalletFragment : Fragment() , IswMobileSdk.IswPaymentCallback{
 
                 viewModel.createCard(jwt, walletRequest)
 
-                viewModel.apiCardModel.observe(this, Observer{ rsp ->
+                viewModel.apiCardModel.observe(viewLifecycleOwner, Observer{ rsp ->
                     if(rsp != null){
 
                         // add to profile model
@@ -169,6 +169,7 @@ class WalletFragment : Fragment() , IswMobileSdk.IswPaymentCallback{
                         Toast.makeText(context, "Card added successfully.", Toast.LENGTH_LONG).show()
                     }
                     else{
+                        busyDialog.dismiss()
                         Toast.makeText(requireContext(), "Error while adding card.", Toast.LENGTH_LONG)
                             .show()
                     }

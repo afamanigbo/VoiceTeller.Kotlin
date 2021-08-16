@@ -27,6 +27,16 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var user: FirebaseUser
     private val firebaseAuth = FirebaseAuth.getInstance()
 
+    private val authStateListener = FirebaseAuth.AuthStateListener {
+
+        if (it.currentUser != null)  {
+            handleSignIn(firebaseAuth.currentUser!!, null)
+        }
+        else{
+            createSignInIntent()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
@@ -36,12 +46,7 @@ class AuthActivity : AppCompatActivity() {
         //PreferencesManager.getInstance(applicationContext).clearAllItems()
         //firebaseAuth.signOut()
 
-        if(firebaseAuth.currentUser == null){
-            createSignInIntent()
-        }
-        else{
-            handleSignIn(firebaseAuth.currentUser!!, null)
-        }
+        firebaseAuth!!.addAuthStateListener(this.authStateListener!!)
 
     }
 
@@ -83,7 +88,7 @@ class AuthActivity : AppCompatActivity() {
                 id = user.email!!,
                 names = user.displayName!!,
                 authenticationType = "firebase",
-                identityProvider = user.providerData[0].providerId,
+                identityProvider = user.providerData[1].providerId,
                 createDate = user.metadata?.creationTimestamp.toString(),
                 imageUrl = user.photoUrl.toString(),
                 walletModel = null
@@ -100,33 +105,10 @@ class AuthActivity : AppCompatActivity() {
 
                 viewModel.createUserSharedPreferences(profileModel, applicationContext)
 
-                // user must have manually signed in for shared preferences to be null
-
-                // Not a new user
-                if (!result?.idpResponse?.isNewUser!!) {
-
-                    Timber.d("M: OLD user")
-
-                    // try to sync from cloud, this will also internally set cloud status
-                    user?.getIdToken(false)?.addOnSuccessListener { rsp ->
-                        val jwt = rsp.token.toString()
-                        viewModel.getUserWorker(jwt, profileModel.id)
-                    }
-                }
-                else{
-                    // This is a new user
-
-                    Timber.d("M: NEW user")
-
-                    // DIFF is true, something has changed - (New User sign in)
-                    viewModel.setDiffStatus(user.email!!, "PUSH", applicationContext)
-
-                    // not in cloud, so push from device to cloud
-                    user?.getIdToken(false)?.addOnSuccessListener { rsp ->
-                        val jwt = rsp.token.toString()
-                        viewModel.createUserWorker(jwt, profileModel)
-                    }
-
+                // try to sync from cloud, this will also internally set cloud status
+                user?.getIdToken(false)?.addOnSuccessListener { rsp ->
+                    val jwt = rsp.token.toString()
+                    viewModel.getUserWorker(jwt, profileModel.id)
                 }
             }
 

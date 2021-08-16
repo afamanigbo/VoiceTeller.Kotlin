@@ -16,7 +16,7 @@
         android:title="Profile"
         android:icon="@drawable/ic_outline_profile" />
 
-    <item android:id="@+id/othersMenu"
-        android:title="Others"
-        android:icon="@drawable/ic_others_menu_24" />
+    <item android:id="@+id/helpMenu"
+        android:title="Help"
+        android:icon="@drawable/ic_help_outline_24" />
 </menu>

@@ -18,8 +18,6 @@ class AuthViewModel(application: Application): AndroidViewModel(application) {
 
     fun createUserWorker(jwt: String, profileModel: ProfileModel){
 
-
-
         val inputData = Data.Builder()
             .putString("jwt", jwt)
             .putString("id", profileModel.id)

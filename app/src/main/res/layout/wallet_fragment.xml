@@ -26,7 +26,9 @@
             android:layout_margin="12dp"
             android:textSize="26sp"
             android:text="Wallet"
-            android:fontFamily="sans-serif-condensed"/>
+            android:layout_gravity="center_horizontal"
+            android:textColor="?attr/editTextColor"
+            android:fontFamily="sans-serif"/>
 
         <View
             android:layout_width="match_parent"
@@ -44,6 +46,7 @@
             android:textSize="20sp"
             android:fontFamily="sans-serif"
             android:text="Debit Cards"
+            android:textColor="?attr/editTextColor"
             android:layout_marginTop="12dp"
             android:layout_marginLeft="12dp"
             />
@@ -65,7 +68,7 @@
             android:contentDescription="Add a new card"
             android:layout_gravity="right"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@android:color/holo_red_dark"
+            android:backgroundTint="@android:color/holo_red_light"
             android:textColor="@color/white"
             app:iconTint="@color/white"
             app:icon="@drawable/ic_baseline_add_24"/>

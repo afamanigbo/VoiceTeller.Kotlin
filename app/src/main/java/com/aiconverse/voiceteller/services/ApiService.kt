@@ -1,8 +1,8 @@
 package com.aiconverse.voiceteller.services
 
-import java.util.concurrent.TimeUnit
-import com.aiconverse.voiceteller.BuildConfig
+import androidx.databinding.library.BuildConfig
 import com.aiconverse.voiceteller.services.profile.ProfileService
+import com.aiconverse.voiceteller.services.voiceprofile.VoiceProfileService
 import com.aiconverse.voiceteller.services.wallet.WalletService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -14,6 +14,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 private const val BASE_URL = "https://voicetellerfunctions.azurewebsites.net/api/"
+
+//private const val BASE_URL = "https://6458e335cd3d.ngrok.io/api/"
 
 /**
  * Build the Moshi object that Retrofit will be using, making sure to add the Kotlin adapter for
@@ -42,10 +44,10 @@ private val retrofit = Retrofit.Builder()
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 it.addInterceptor(logging)
             }
-            it.callTimeout(3, TimeUnit.MINUTES)
-            it.connectTimeout(30, TimeUnit.SECONDS)
-            it.readTimeout(30, TimeUnit.SECONDS)
-            it.writeTimeout(30, TimeUnit.SECONDS)
+//            it.callTimeout(3, TimeUnit.MINUTES)
+//            it.connectTimeout(30, TimeUnit.SECONDS)
+//            it.readTimeout(30, TimeUnit.SECONDS)
+//            it.writeTimeout(30, TimeUnit.SECONDS)
         }.build()
     )
     .build()
@@ -54,9 +56,16 @@ private val retrofit = Retrofit.Builder()
  * A public Api object that exposes the lazy-initialized Retrofit service
  */
 object ProfileApi {
-    val profileService : ProfileService by lazy { retrofit.create(ProfileService::class.java) }
+    val profileService : ProfileService
+    by lazy { retrofit.create(ProfileService::class.java) }
 }
 
 object WalletApi {
-    val walletService: WalletService by lazy { retrofit.create(WalletService::class.java) }
+    val walletService: WalletService
+    by lazy { retrofit.create(WalletService::class.java) }
+}
+
+object VoiceProfileApi{
+    val voiceProfileService: VoiceProfileService
+    by lazy { retrofit.create(VoiceProfileService::class.java) }
 }

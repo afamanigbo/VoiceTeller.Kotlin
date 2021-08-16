@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.aiconverse.voiceteller.R
 import com.aiconverse.voiceteller.databinding.EditCardFragmentBinding
 import com.aiconverse.voiceteller.databinding.WalletFragmentBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class EditCardFragment : Fragment() {
 

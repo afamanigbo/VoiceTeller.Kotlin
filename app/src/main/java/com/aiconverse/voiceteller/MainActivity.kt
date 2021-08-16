@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.aiconverse.voiceteller.ui.home.HomeFragment
-import com.aiconverse.voiceteller.ui.others.OthersFragment
+import com.aiconverse.voiceteller.ui.help.HelpFragment
 import com.aiconverse.voiceteller.ui.payment.PaymentFragment
 import com.aiconverse.voiceteller.ui.profile.ProfileFragment
 import com.aiconverse.voiceteller.ui.wallet.WalletFragment
@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private val mWalletFragment = WalletFragment()
     private val mPaymentFragment = PaymentFragment()
     private val mProfileFragment = ProfileFragment()
-    private val mOthersFragment = OthersFragment()
+    private val mHelpFragment = HelpFragment()
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
@@ -56,8 +56,8 @@ class MainActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
 
-                R.id.othersMenu -> {
-                    loadFragment(mOthersFragment)
+                R.id.helpMenu -> {
+                    loadFragment(mHelpFragment)
                     return@setOnNavigationItemSelectedListener true
                 }
                 else -> false

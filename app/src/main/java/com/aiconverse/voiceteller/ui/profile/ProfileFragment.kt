@@ -12,6 +12,8 @@ import androidx.databinding.DataBindingUtil
 import com.aiconverse.voiceteller.AuthActivity
 import com.aiconverse.voiceteller.R
 import com.aiconverse.voiceteller.databinding.ProfileFragmentBinding
+import com.aiconverse.voiceteller.ui.profile.fingerprint.FingerprintProfileFragment
+import com.aiconverse.voiceteller.ui.profile.voice.VoiceProfileFragment
 import com.aiconverse.voiceteller.ui.wallet.WalletViewModel
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -77,6 +79,25 @@ class ProfileFragment : Fragment() {
             var alert = builder.create()
             alert.show()
         }
+
+        // handle menu items
+
+        binding.cmdFingerprint.setOnClickListener{
+
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.frameLayout_Container, FingerprintProfileFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }
+
+        binding.cmdVoice.setOnClickListener{
+
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.frameLayout_Container, VoiceProfileFragment())
+                ?.addToBackStack(null)
+                ?.commit()
+        }
+
         return binding.root
     }
 

@@ -141,7 +141,7 @@
         android:layout_height="60dp"
         android:textSize="20sp"
         android:text="Get Started"
-        android:backgroundTint="@android:color/holo_red_dark"
+        android:backgroundTint="@android:color/holo_red_light"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline2" />

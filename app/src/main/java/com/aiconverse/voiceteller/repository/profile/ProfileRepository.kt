@@ -1,6 +1,8 @@
 package com.aiconverse.voiceteller.repository.profile
 
 import android.content.Context
+import com.aiconverse.voiceteller.repository.voiceprofile.VoiceEnrollmentModel
+import com.aiconverse.voiceteller.repository.voiceprofile.VoiceProfileModel
 import com.aiconverse.voiceteller.repository.wallet.CardModel
 import com.aiconverse.voiceteller.repository.wallet.WalletModel
 import com.aiconverse.voiceteller.services.ProfileApi
@@ -95,6 +97,24 @@ object ProfileRepository {
                 profileModel.walletModel?.cardModel?.add(cardModel)
             }
 
+            setUserSharedPreferences(profileModel, applicationContext)
+        }
+    }
+
+    fun updateVoiceProfile(id: String, applicationContext: Context, voiceProfileModel: VoiceProfileModel){
+        var profileModel = getUserFromSharedPreferences(id, applicationContext)
+
+        if(profileModel != null){
+            profileModel.voiceProfileModel = voiceProfileModel
+            setUserSharedPreferences(profileModel, applicationContext)
+        }
+    }
+
+    fun updateVoiceEnrollment(id: String, applicationContext: Context, voiceEnrollmentModel: VoiceEnrollmentModel){
+        var profileModel = getUserFromSharedPreferences(id, applicationContext)
+
+        if(profileModel != null){
+            profileModel.voiceEnrollmentModel = voiceEnrollmentModel
             setUserSharedPreferences(profileModel, applicationContext)
         }
     }

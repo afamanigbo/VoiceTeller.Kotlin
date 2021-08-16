@@ -1,4 +1,4 @@
-package com.aiconverse.voiceteller.ui.others
+package com.aiconverse.voiceteller.ui.help
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,24 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import com.aiconverse.voiceteller.R
 
-class OthersFragment : Fragment() {
+class HelpFragment : Fragment() {
 
     companion object {
-        fun newInstance() = OthersFragment()
+        fun newInstance() = HelpFragment()
     }
 
-    private lateinit var viewModel: OthersViewModel
+    private lateinit var viewModel: HelpViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.others_fragment, container, false)
+        return inflater.inflate(R.layout.help_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(OthersViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(HelpViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

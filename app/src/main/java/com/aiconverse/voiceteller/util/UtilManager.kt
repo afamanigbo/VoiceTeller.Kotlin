@@ -8,6 +8,10 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
+import java.lang.Exception
+import java.text.DateFormatSymbols
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 
@@ -66,6 +70,18 @@ object UtilManager {
             "MAESTRO" -> R.drawable.isw_ic_card_maestro
             "UNIONPAY" -> R.drawable.isw_ic_card_unionpay
             else -> R.drawable.isw_ic_card_empty
+        }
+    }
+
+    fun formatDate(input: String): String {
+        try {
+            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+            val parsedDate = format.parse(input)
+            val newDateFormat = SimpleDateFormat("dd-MMM-yyyy hh:mm aa")
+            return newDateFormat.format(parsedDate)
+        }
+        catch(e: Exception){
+            return input
         }
     }
 }
